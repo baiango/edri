@@ -28,7 +28,9 @@ unit_test :: proc()
 	fmt.println("rle test")
 {	arr := [dynamic]i64{ 1, 0, 1, 0, 0, 1, 1, 0 }
 	str := rle8_enc(arr)
-	fmt.println(str) } // No test yet as it's not complete
+	fmt.println(str)
+	if str != "110111021201" {fmt.println("Info: rle8_enc is not 110111021201. It returned \"", str, "\"")}}
+	// it's not complete
 
 	fmt.println("ycocg test")
 {	color := rgb8{255, 255, 255}

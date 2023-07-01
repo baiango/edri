@@ -8,7 +8,7 @@ import "core:strings"
 fwht :: proc(arr: [dynamic]i64) -> [dynamic]i64
 {	ret := arr
 
-	log_size := math.log2_f32(f32(len(ret)))
+	log_size := math.log2(f32(len(ret)))
 	if log_size != math.floor(log_size)
 	{	fmt.println("Warn: fwht received non-power of 2 array. Returning Empty array.")
 		return [dynamic]i64{} }
