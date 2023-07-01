@@ -79,3 +79,8 @@ array_hash_i64 :: proc(arr: [dynamic]i64) -> u64
 	return hash }
 
 array_hash :: proc{ array_hash_i64 }
+
+join :: proc(arr_str [dynamic][dynamic]string)
+{
+	
+}
