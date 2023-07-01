@@ -43,7 +43,6 @@ rgb8_to_ycocg8 :: proc(input: rgb8) -> ycocg8
 	ret.co = input.r >> 1 - input.b >> 1
 	ret.cg = -(input.r >> 2) + input.g >> 1 - input.b >> 2
 	return ret }
-
 ycocg8_to_rgb8 :: proc(input: ycocg8) -> rgb8
 {	ret: rgb8
 	ret.r = input.y + input.co - input.cg
@@ -72,15 +71,26 @@ rle8_enc :: proc(arr: [dynamic]i64) -> string
 	return str }
 
 
+lehmer :: proc(num: $T) -> u64 { return u64(num) * 0xd1342543de82ef95}
 // It has a chance with hash collision. But it's good enough for comparing 2 arrays
 array_hash_i64 :: proc(arr: [dynamic]i64) -> u64
 {	hash: u64 = 1023
-	for i in 0..<len(arr) { hash *= u64(arr[i]) * 0xd1342543de82ef95 }
+	for i in 0..<len(arr) { hash += lehmer(arr[i]) }
+	return hash }
+array_hash_str :: proc(arr: [dynamic]string) -> u64
+{	hash: u64 = 1023
+	for i in 0..<len(arr)
+	{	for j in 0..<len(arr[i])
+		{	hash += lehmer(arr[i][j]) }}
 	return hash }
 
-array_hash :: proc{ array_hash_i64 }
+hash :: proc{ array_hash_i64, array_hash_str }
 
-join :: proc(arr_str [dynamic][dynamic]string)
-{
-	
-}
+// Work in progress
+join :: proc(separator: string, args: ..[dynamic]string) -> [dynamic]string
+{	ret: [dynamic]string
+	for i in 0..<len(args)
+	{	for j in 0..<len(args[i])
+		{	append(&ret, args[i][j])
+			fmt.println(args[i][j]) }}
+	return ret }
