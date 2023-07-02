@@ -3,6 +3,7 @@ package main
 import "core:fmt"
 import "core:math"
 import "core:strings"
+import "core:io"
 
 // Fast Walsh-Hadamard transform
 fwht :: proc(arr: [dynamic]i64) -> [dynamic]i64
@@ -58,10 +59,10 @@ get_bit_length :: proc(num: $t) -> u8
 	return bit_length }
 // Variable bit integer
 vbi_enc :: proc(num: u32) -> u64
-{	num_padded := num + 1 // prevent interger 1 overflow, 45 + 1 = 101110
+{	num_padded := cast(u64)num + 1 // prevent interger 1 overflow, 45 + 1 = 101110
 	bit_length := get_bit_length(num_padded)
 	num_length: u64 = 1 << (bit_length - 1) // 100000 = 32
-	value := cast(u64)num_padded - num_length // 101110(46) - 100000(32) = 01110(14)
+	value: u64 = num_padded - num_length // 101110(46) - 100000(32) = 01110(14)
 	num_length -= 2 // 11110, use 0 as the terminator
 	return num_length << (bit_length - 1) | value } // 11110_01110(974), put the num_length and the value together
 // Work in progress. This is really hard
