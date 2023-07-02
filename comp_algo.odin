@@ -16,7 +16,7 @@ fwht :: proc(arr: [dynamic]i64) -> [dynamic]i64
 	x, y: i64 = 0, 0
 	h := 1
 	for h < len(arr)
-	{	for i := 0; i < len(arr); i += h*2
+	{	for i := 0; i < len(arr); i += h * 2
 		{	for j in i..<i+h
 			{	x = ret[j]
 				y = ret[j + h]
@@ -49,14 +49,25 @@ ycocg8_to_rgb8 :: proc(input: ycocg8) -> rgb8
 	ret.b = input.y - input.co - input.cg
 	return ret }
 
-
-// Work in progress
-rle8_enc :: proc(arr: [dynamic]i64) -> string
-{	arr := arr
-	str := ""
+get_bit_length :: proc(num: $t) -> u8
+{	tmp := num
+	bit_length: u8 = 0
+	for tmp > 0
+	{	bit_length += 1
+		tmp >>= 1 }
+	return bit_length }
+// Variable bit integer
+vbi_enc :: proc(num: u32) -> u64
+{	bit_length := get_bit_length(num)
+	num_length: u64 = 1 << (bit_length - 1)
+	value := cast(u64)num - num_length
+	num_length -= 2
+	return num_length << (bit_length - 1) | value }
+// Work in progress. This is really hard
+rle16_enc_b :: proc(arr: string) -> string // Rle type b
+{	str := ""
 	str_arr: [dynamic]string
 	length := 1
-	fmt.println(get_ascii(1))
 	for i in 0..<len(arr) - 1
 	{	is_equal_next := arr[i] == arr[i + 1]
 		// fmt.println(is_equal_next)
@@ -69,32 +80,41 @@ rle8_enc :: proc(arr: [dynamic]i64) -> string
 	// str_arr
 	return str }
 
+ac_enc :: proc() // arithmetic coding
+{	}
 
-lehmer :: #force_inline proc(num: $T) -> u64 { return u64(num) * 0xd1342543de82ef95}
-get_default_hash :: #force_inline proc() -> u64 { return 1023 }
+
+lehmer :: #force_inline proc(num: $t) -> u64 { return u64(num) * 0xd1342543de82ef95}
+
 // It has a chance with hash collision. But it's good enough for comparing 2 arrays
-array_hash_i64 :: proc(arr: [dynamic]i64) -> u64
-{	hash := get_default_hash()
-	for i in 0..<len(arr) { hash += lehmer(arr[i]) }
+get_default_hash: u64 = 1023
+hash_array_i64 :: proc(arr: [dynamic]i64) -> u64
+{	hash := get_default_hash
+	for i in 0..<len(arr) do hash += lehmer(arr[i])
 	return hash }
-array_hash_str :: proc(arr: [dynamic]string) -> u64
-{	hash := get_default_hash()
+hash_array_str :: proc(arr: [dynamic]string) -> u64
+{	hash := get_default_hash
 	for i in 0..<len(arr)
 	{	for j in 0..<len(arr[i])
 		{	hash += lehmer(arr[i][j]) }}
 	return hash }
 hash_str :: proc(arr: string) -> u64
-{	hash := get_default_hash()
-	for i in 0..<len(arr) { hash += lehmer(arr[i]) }
+{	hash := get_default_hash
+	for i in 0..<len(arr) do hash += lehmer(arr[i])
 	return hash }
-hash :: proc{ array_hash_i64, array_hash_str, hash_str }
+
+hash :: proc{ hash_array_i64, hash_array_str, hash_str }
+
 
 join :: proc(separator: string, args: ..[dynamic]string) -> string
-{	tmp: [1024]string
-	index := 0
+{	ret: [dynamic]string
+{	sum := 0
+	for arr in args do sum += len(arr)
+	resize(&ret, sum * 2) }
+{	index := 0
 	for i in args
 	{	for j in i
-		{	tmp[index] = j
-			tmp[index + 1] = separator
+		{	ret[index] = j
+			ret[index + 1] = separator
 			index += 2 }}
-	return strings.concatenate(tmp[:index - 1]) }
+	return strings.concatenate(ret[:index - 1]) }}
