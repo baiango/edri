@@ -90,11 +90,11 @@ hash_str :: proc(arr: string) -> u64
 hash :: proc{ array_hash_i64, array_hash_str, hash_str }
 
 join :: proc(separator: string, args: ..[dynamic]string) -> string
-{	tmp: [dynamic]string
-	resize(&tmp, len(args) + 1)
-{	index := 0
+{	tmp: [1024]string
+	index := 0
 	for i in args
 	{	for j in i
 		{	tmp[index] = j
-			index += 1 }}}
-	return strings.concatenate(tmp[:]) }
+			tmp[index + 1] = separator
+			index += 2 }}
+	return strings.concatenate(tmp[:index - 1]) }

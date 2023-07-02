@@ -43,8 +43,8 @@ unit_test :: proc()
 	fmt.println(color) }
 
 	fmt.println("join test")
-{	a := "11"
+{	a := "1"
 	b := [dynamic]string{"22", "333"}
-	c := join(", ", {a}, b, {"4444"})
-	if hash(c) != hash("11223334444") { fmt.println("Info: join is", c , "and it doesn't match 1223334444.") }
+	c := join(", ", {a}, b, {"4444", "55555"})
+	if hash(c) != hash("1, 22, 333, 4444, 55555") { fmt.println("Info: join is", c , "and it doesn't match \"1, 22, 333, 4444, 55555\".") }
 	fmt.println(c) }}
