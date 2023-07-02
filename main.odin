@@ -25,13 +25,12 @@ unit_test :: proc()
 	if len(arr) != 0 do fmt.println("Info: fwht doesn't return empty array when error.")
 	fmt.println(arr) }
 
-	// it's not complete
 	fmt.println("rle8 ascii test")
 {	init := "aaaaaabbbccxzzmmx"
 	str := rle8_ascii_enc(init)
 	if str != "a6b3c2xz2m2x" do fmt.println(`Info: rle8_ascii_enc is not a6b3c2xz2m2x. It returned "`, str, `"`)
 	fmt.println(str) }
-	{	init := "a6b3c2xz2m2x"
+{	init := "a6b3c2xz2m2x"
 	// str := rle8_ascii_dec(init)
 	// if str != "aaaaaabbbccxzzmmx" do fmt.println(`Info: rle8_ascii_dec is not aaaaaabbbccxzzmmx. It returned "`, str, `"`)
 	fmt.println(init) }
@@ -70,4 +69,9 @@ unit_test :: proc()
 	num = gc_dec(0b1111001110)
 	if num != 45 do fmt.println("Info: gc_dec is not 45. It's", num, ".")
 	fmt.println(num) }
+
+	fmt.println("string terminator test")
+{	termi := add_str_terminator("100", 5)
+	if termi != "1005" do fmt.println("Info add_str_terminator is not 1005. It's", termi, ".")
+	fmt.println(termi) }
 }

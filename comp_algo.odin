@@ -6,28 +6,24 @@ import "core:strings"
 import "core:io"
 
 // Fast Walsh-Hadamard transform
-fwht :: proc(arr: [dynamic]i64) -> [dynamic]i64
-{	ret := arr
-
-	log_size := math.log2(f32(len(ret)))
+fwht :: proc(num_arr: [dynamic]i64) -> [dynamic]i64
+{{	log_size := math.log2(f32(len(num_arr)))
 	if log_size != math.floor(log_size)
-	{	fmt.println("Warn: fwht received non-power of 2 array. Returning Empty array.")
-		return [dynamic]i64{} }
+	{	fmt.println("Warn: fwht received non-power of 2 array. Returning empty array.")
+		return [dynamic]i64{} }}
 
-	x, y: i64 = 0, 0
-	h := 1
-	for h < len(ret)
+	ret := num_arr
+	for h := 1; h < len(ret); h *= 2
 	{	for i := 0; i < len(ret); i += h * 2
 		{	for j in i..<i+h
-			{	x = ret[j]
-				y = ret[j + h]
+			{	x := ret[j]
+				y := ret[j + h]
 				ret[j] = x + y
-				ret[j + h] = x - y }}
-		h *= 2 }
+				ret[j + h] = x - y }}}
 	return ret }
-rfwht :: proc(arr: [dynamic]i64) -> [dynamic]i64
-{	ret := fwht(arr)
-	for i in 0..<len(arr) { ret[i] /= i64(len(arr)) }
+rfwht :: proc(num_arr: [dynamic]i64) -> [dynamic]i64
+{	ret := fwht(num_arr)
+	for i in 0..<len(num_arr) { ret[i] /= i64(len(num_arr)) }
 	return ret }
 
 
@@ -50,6 +46,12 @@ ycocg8_to_rgb8 :: proc(input: ycocg8) -> rgb8
 	ret.b = input.y - input.co - input.cg
 	return ret }
 
+// Work in progress
+rgb8_chroma_subsampling_420 :: proc(input: [4]rgb8) -> [4]rgb8
+rgb8_chroma_subsampling_422 :: proc(input: [4]rgb8) -> [4]rgb8
+
+// For offsetting the string if the last string is not a full byte
+add_str_terminator :: #force_inline proc(txt: string, offset: u8) -> string { return join("", {txt}, {get_number(offset)})}
 get_bit_length :: proc(num: $t) -> u8
 {	tmp := num
 	bit_length: u8 = 0
@@ -57,8 +59,7 @@ get_bit_length :: proc(num: $t) -> u8
 	{	bit_length += 1
 		tmp >>= 1 }
 	return bit_length }
-// Gamma coding
-gc_enc :: proc(num: u32) -> u64
+gc_enc :: proc(num: u32) -> u64 // Gamma coding
 {	num_padded := cast(u64)num + 1 // prevent interger 1 overflow, 45 + 1 = 101110
 	bit_length := get_bit_length(num_padded)
 	num_length: u64 = 1 << (bit_length - 1) - 2 // 11110, use 0 as the terminator
@@ -76,32 +77,28 @@ gc_dec :: proc(num: u64) -> u32
 	value: u32 = num_padded - (num_length << (bit_length / 2))
 	return num_length + value }
 
-// Work in progress. This is really hard
-rle8_ascii_enc :: proc(arr: string) -> string // Rle type b
-{	str_arr: [dynamic]string
+
+rle8_ascii_enc :: proc(txt: string) -> string // Run-length encoding type a
+{	txt_arr: [dynamic]string
 	length := 1
-	for i in 0..<len(arr) - 1
-	{	is_equal_next := arr[i] == arr[i + 1]
-		// fmt.println(is_equal_next)
+	for i in 0..<len(txt) - 1
+	{	is_equal_next := txt[i] == txt[i + 1]
 		if is_equal_next
 		{	length += 1
-			continue } // You can't join the dynamic string
-		else
-		{	append(&str_arr, get_ascii(arr[i]))
-			if length > 1 do append(&str_arr, get_number(cast(u8)length))
-			length = 1 }}
-	append(&str_arr, get_ascii(arr[len(arr) - 1]))
-	if length > 1 do append(&str_arr, get_number(cast(u8)length))
-	return join("", str_arr) }
+			continue }
+		append(&txt_arr, get_ascii(txt[i]))
+		if length > 1 do append(&txt_arr, get_number(cast(u8)length))
+		length = 1 }
+	append(&txt_arr, get_ascii(txt[len(txt) - 1]))
+	if length > 1 do append(&txt_arr, get_number(cast(u8)length))
+	return join("", txt_arr) }
 
-hc_enc :: proc() // Huffman coding
-{	}
-ac_enc :: proc() // Arithmetic coding
-{	}
+// Work in progress
+hc_enc :: proc(txt: string) -> string // Huffman coding
+ac_enc :: proc(txt: string) -> string // Arithmetic coding
 
 
 lehmer :: #force_inline proc(num: $t) -> u64 { return u64(num) * 0xd1342543de82ef95}
-
 // It has a chance with hash collision. But it's good enough for comparing 2 arrays
 get_default_hash: u64 = 1023
 hash_array_i64 :: proc(arr: [dynamic]i64) -> u64
@@ -118,19 +115,19 @@ hash_str :: proc(arr: string) -> u64
 {	hash := get_default_hash
 	for i in 0..<len(arr) do hash += lehmer(arr[i])
 	return hash }
-
 hash :: proc{ hash_array_i64, hash_array_str, hash_str }
 
 
 join :: proc(separator: string, args: ..[dynamic]string) -> string
 {	ret: [dynamic]string
-{	sum := 0
-	for arr in args do sum += len(arr)
-	resize(&ret, sum * 2) }
-{	index := 0
+{	length_sum := 0
+	for arr in args do length_sum += len(arr)
+	resize(&ret, length_sum * 2) }
+
+	index := 0
 	for i in args
 	{	for j in i
 		{	ret[index] = j
 			ret[index + 1] = separator
 			index += 2 }}
-	return strings.concatenate(ret[:index - 1]) }}
+	return strings.concatenate(ret[:index - 1]) }
