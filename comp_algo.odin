@@ -16,8 +16,8 @@ fwht :: proc(arr: [dynamic]i64) -> [dynamic]i64
 
 	x, y: i64 = 0, 0
 	h := 1
-	for h < len(arr)
-	{	for i := 0; i < len(arr); i += h * 2
+	for h < len(ret)
+	{	for i := 0; i < len(ret); i += h * 2
 		{	for j in i..<i+h
 			{	x = ret[j]
 				y = ret[j + h]
@@ -57,14 +57,25 @@ get_bit_length :: proc(num: $t) -> u8
 	{	bit_length += 1
 		tmp >>= 1 }
 	return bit_length }
-// Variable bit integer
-vbi_enc :: proc(num: u32) -> u64
+// Gamma coding
+gc_enc :: proc(num: u32) -> u64
 {	num_padded := cast(u64)num + 1 // prevent interger 1 overflow, 45 + 1 = 101110
 	bit_length := get_bit_length(num_padded)
-	num_length: u64 = 1 << (bit_length - 1) // 100000 = 32
-	value: u64 = num_padded - num_length // 101110(46) - 100000(32) = 01110(14)
-	num_length -= 2 // 11110, use 0 as the terminator
+	num_length: u64 = 1 << (bit_length - 1) - 2 // 11110, use 0 as the terminator
+	value: u64 = num_padded - (1 << (bit_length - 1)) // 101110(46) - 100000(32) = 01110(14)
 	return num_length << (bit_length - 1) | value } // 11110_01110(974), put the num_length and the value together
+gc_dec :: proc(num: u64) -> u32
+{	bit_length := get_bit_length(num)
+	is_even := bit_length & 1 == 0
+	if !is_even
+	{	fmt.println("Warn: gc_dec found non-multiple of 2 bitwise number. Returning 0")
+		return 0 }
+
+	num_padded := cast(u32)num + 1
+	num_length: u32 = num_padded >> (bit_length / 2)
+	value: u32 = num_padded - (num_length << (bit_length / 2))
+	return num_length + value }
+
 // Work in progress. This is really hard
 rle16_enc_b :: proc(arr: string) -> string // Rle type b
 {	str := ""
@@ -82,6 +93,7 @@ rle16_enc_b :: proc(arr: string) -> string // Rle type b
 	// str_arr
 	return str }
 
+hc_enc :: proc() // huffman coding
 ac_enc :: proc() // arithmetic coding
 {	}
 

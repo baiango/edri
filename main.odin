@@ -29,7 +29,7 @@ unit_test :: proc()
 	fmt.println("rle16 b test")
 {	arr := "aaaaaabbbccxzzmmx"
 	str := rle16_enc_b(arr)
-	if str != "110111021201" do fmt.println(`Info: rle8_enc is not 110111021201. It returned "`, str, `"`)
+	if str != "a6b3c2xz2m2x" do fmt.println(`Info: rle16_enc is not a6b3c2xz2m2x. It returned "`, str, `"`)
 	fmt.println(str) }
 
 	fmt.println("ycocg test")
@@ -50,14 +50,20 @@ unit_test :: proc()
 	fmt.println(c) }
 
 	fmt.println("get_bit_length test")
-	num: u32 = 45
+{	num := 45
 	fmt.println(get_bit_length(num))
-	fmt.println("vbi test")
-	vbi: u64 = vbi_enc(num)
-	if vbi != 0b1111001110 do fmt.println("Info: vbi_enc is not 0b1111001110 or", 0b1111001110, ". It's", vbi, ".")
-	fmt.println(vbi)
-	vbi = vbi_enc(1)
-	if vbi != 0 do fmt.println("Info: vbi_enc is not 0. It might be overflowing. It's", vbi, ".")
-	fmt.println(vbi)
-	fmt.println(get_bit_length(vbi))
+	fmt.println("gc test") }
+{	num: u32 = 45
+	gc := gc_enc(num)
+	if gc != 0b1111001110 do fmt.println("Info: gc_enc is not 0b1111001110 or", 0b1111001110, ". It's", gc, ".")
+	fmt.println(gc)
+	gc = gc_enc(1)
+	if gc != 0 do fmt.println("Info: gc_enc is not 0. It might be overflowing. It's", gc, ".")
+	fmt.println(gc)
+	fmt.println(get_bit_length(gc)) }
+{	num := gc_dec(0b101)
+	if num != 0 do fmt.println("Info: gc_dec failed to return 0 on error. It's", num, ".")
+	num = gc_dec(0b1111001110)
+	if num != 45 do fmt.println("Info: gc_dec is not 45. It's", num, ".")
+	fmt.println(num) }
 }
