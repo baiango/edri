@@ -77,9 +77,8 @@ gc_dec :: proc(num: u64) -> u32
 	return num_length + value }
 
 // Work in progress. This is really hard
-rle16_enc_b :: proc(arr: string) -> string // Rle type b
-{	str := ""
-	str_arr: [dynamic]string
+rle8_ascii_enc :: proc(arr: string) -> string // Rle type b
+{	str_arr: [dynamic]string
 	length := 1
 	for i in 0..<len(arr) - 1
 	{	is_equal_next := arr[i] == arr[i + 1]
@@ -87,14 +86,17 @@ rle16_enc_b :: proc(arr: string) -> string // Rle type b
 		if is_equal_next
 		{	length += 1
 			continue } // You can't join the dynamic string
-			append(&str_arr, get_ascii(u8(arr[i])))
-		}
-	fmt.println(str_arr)
-	// str_arr
-	return str }
+		else
+		{	append(&str_arr, get_ascii(arr[i]))
+			if length > 1 do append(&str_arr, get_number(cast(u8)length))
+			length = 1 }}
+	append(&str_arr, get_ascii(arr[len(arr) - 1]))
+	if length > 1 do append(&str_arr, get_number(cast(u8)length))
+	return join("", str_arr) }
 
-hc_enc :: proc() // huffman coding
-ac_enc :: proc() // arithmetic coding
+hc_enc :: proc() // Huffman coding
+{	}
+ac_enc :: proc() // Arithmetic coding
 {	}
 
 

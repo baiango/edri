@@ -26,11 +26,15 @@ unit_test :: proc()
 	fmt.println(arr) }
 
 	// it's not complete
-	fmt.println("rle16 b test")
-{	arr := "aaaaaabbbccxzzmmx"
-	str := rle16_enc_b(arr)
-	if str != "a6b3c2xz2m2x" do fmt.println(`Info: rle16_enc is not a6b3c2xz2m2x. It returned "`, str, `"`)
+	fmt.println("rle8 ascii test")
+{	init := "aaaaaabbbccxzzmmx"
+	str := rle8_ascii_enc(init)
+	if str != "a6b3c2xz2m2x" do fmt.println(`Info: rle8_ascii_enc is not a6b3c2xz2m2x. It returned "`, str, `"`)
 	fmt.println(str) }
+	{	init := "a6b3c2xz2m2x"
+	// str := rle8_ascii_dec(init)
+	// if str != "aaaaaabbbccxzzmmx" do fmt.println(`Info: rle8_ascii_dec is not aaaaaabbbccxzzmmx. It returned "`, str, `"`)
+	fmt.println(init) }
 
 	fmt.println("ycocg test")
 {	color := rgb8{255, 255, 255}
