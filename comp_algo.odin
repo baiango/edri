@@ -96,8 +96,7 @@ rle8_ascii_enc :: proc(txt: string) -> string // Run-length encoding type a
 // https://arxiv.org/pdf/2110.01111.pdf
 insertion_sort :: proc(arr: []u64) -> []u64
 {	for i in 0..<len(arr) do for j in 0..<len(arr)
-	{{	if arr[i] < arr[j]
-		{	arr[i], arr[j] = arr[j], arr[i] }}}
+	{{	if arr[i] < arr[j] do arr[i], arr[j] = arr[j], arr[i] }}
 	return arr }
 // Work in progress
 hc_enc :: proc(txt: string) -> string // Huffman coding
@@ -113,7 +112,7 @@ hc_enc :: proc(txt: string) -> string // Huffman coding
 ac_enc :: proc(txt: string) -> string // Arithmetic coding
 
 
-lehmer :: #force_inline proc(num: $t) -> u64 { return u64(num) * 0xd1342543de82ef95}
+lehmer :: #force_inline proc(num: $t) -> u64 { return u64(num) * 0xd1342543de82ef95 }
 // It has a chance with hash collision. But it's good enough for comparing 2 arrays
 get_default_hash: u64 = 1023
 hash_array_i64 :: proc(arr: [dynamic]i64) -> u64
@@ -122,9 +121,8 @@ hash_array_i64 :: proc(arr: [dynamic]i64) -> u64
 	return hash }
 hash_array_str :: proc(arr: [dynamic]string) -> u64
 {	hash := get_default_hash
-	for i in 0..<len(arr)
-	{	for j in 0..<len(arr[i])
-		{	hash += lehmer(arr[i][j]) }}
+	for i in 0..<len(arr) do for j in 0..<len(arr[i])
+	{{	hash += lehmer(arr[i][j]) }}
 	return hash }
 hash_str :: proc(arr: string) -> u64
 {	hash := get_default_hash
