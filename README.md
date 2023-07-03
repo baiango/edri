@@ -1,7 +1,8 @@
 # Edri - Extended Dynamic Range Image
  
 The EXR is taking too much space for my drive. Or on the cloud drive. My drive can't store it.  
-So this was borned to compress the HDRI better.
+So this was borned to compress the HDRI better.  
+This is a work in progress project. But you can see the code.  
 
 # Compiling
 [Odin requirements](https://odin-lang.org/docs/install/#requirements)  
