@@ -93,13 +93,22 @@ rle8_ascii_enc :: proc(txt: string) -> string // Run-length encoding type a
 	if length > 1 do append(&txt_arr, get_number[cast(u8)length])
 	return join("", txt_arr) }
 
+// https://arxiv.org/pdf/2110.01111.pdf
+insertion_sort :: proc(arr: []u64) -> []u64
+{	for i in 0..<len(arr)
+	{	for j in 0..<len(arr)
+		{	if arr[i] < arr[j]
+			{	arr[i], arr[j] = arr[j], arr[i] }}}
+	return arr }
 // Work in progress
-lsd_radix_sort() :: proc(arr: []u8) -> []u8
 hc_enc :: proc(txt: string) -> string // Huffman coding
+{	weights_trimmed: []u64
 {	weights: [256]u64
 	for i in 0..<len(txt) do weights[txt[i]] += 1
-	// char := 
 	fmt.println(weights)
+	weights_trimmed = insertion_sort(weights[:]) }
+	fmt.println(weights_trimmed)
+	// char := 
 	return ""
 }
 ac_enc :: proc(txt: string) -> string // Arithmetic coding
