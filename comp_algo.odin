@@ -51,7 +51,7 @@ rgb8_chroma_subsampling_420 :: proc(input: [4]rgb8) -> [4]rgb8
 rgb8_chroma_subsampling_422 :: proc(input: [4]rgb8) -> [4]rgb8
 
 // For offsetting the string if the last string is not a full byte
-add_str_terminator :: #force_inline proc(txt: string, offset: u8) -> string { return join("", {txt}, {get_number(offset)})}
+add_string_terminator :: #force_inline proc(txt: string, offset: u8) -> string { return join("", {txt}, {get_number[offset]})}
 get_bit_length :: proc(num: $t) -> u8
 {	tmp := num
 	bit_length: u8 = 0
@@ -86,15 +86,22 @@ rle8_ascii_enc :: proc(txt: string) -> string // Run-length encoding type a
 		if is_equal_next
 		{	length += 1
 			continue }
-		append(&txt_arr, get_ascii(txt[i]))
-		if length > 1 do append(&txt_arr, get_number(cast(u8)length))
+		append(&txt_arr, get_ascii[txt[i]])
+		if length > 1 do append(&txt_arr, get_number[cast(u8)length])
 		length = 1 }
-	append(&txt_arr, get_ascii(txt[len(txt) - 1]))
-	if length > 1 do append(&txt_arr, get_number(cast(u8)length))
+	append(&txt_arr, get_ascii[txt[len(txt) - 1]])
+	if length > 1 do append(&txt_arr, get_number[cast(u8)length])
 	return join("", txt_arr) }
 
 // Work in progress
+lsd_radix_sort() :: proc(arr: []u8) -> []u8
 hc_enc :: proc(txt: string) -> string // Huffman coding
+{	weights: [256]u64
+	for i in 0..<len(txt) do weights[txt[i]] += 1
+	// char := 
+	fmt.println(weights)
+	return ""
+}
 ac_enc :: proc(txt: string) -> string // Arithmetic coding
 
 

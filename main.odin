@@ -71,7 +71,12 @@ unit_test :: proc()
 	fmt.println(num) }
 
 	fmt.println("string terminator test")
-{	termi := add_str_terminator("100", 5)
-	if termi != "1005" do fmt.println("Info add_str_terminator is not 1005. It's", termi, ".")
+{	termi := add_string_terminator("100", 5)
+	if termi != "1005" do fmt.println("Info: add_string_terminator is not 1005. It's", termi, ".")
 	fmt.println(termi) }
+
+	fmt.println("huffman coding test")
+{	str := "AAAVCVVAVBBBBBCCCCCCC"
+	str = hc_enc(str)
+	fmt.println(str) }
 }
