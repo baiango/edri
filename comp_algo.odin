@@ -7,19 +7,18 @@ import "core:io"
 
 // Fast Walsh-Hadamard transform
 fwht :: proc(num_arr: [dynamic]i64) -> [dynamic]i64
-{{	log_size := math.log2(f32(len(num_arr)))
-	if log_size != math.floor(log_size)
+{{	log_arr_size := math.log2(f32(len(num_arr)))
+	if log_arr_size != math.floor(log_arr_size)
 	{	fmt.println("Warn: fwht received non-power of 2 array. Returning empty array.")
 		return [dynamic]i64{} }}
 
 	ret := num_arr
-	for h := 1; h < len(ret); h *= 2
-	{	for i := 0; i < len(ret); i += h * 2
-		{	for j in i..<i+h
-			{	x := ret[j]
-				y := ret[j + h]
-				ret[j] = x + y
-				ret[j + h] = x - y }}}
+	for h := 1; h < len(ret); h *= 2 do for i := 0; i < len(ret); i += h * 2
+	{{	for j in i..<i+h
+		{	x := ret[j]
+			y := ret[j + h]
+			ret[j] = x + y
+			ret[j + h] = x - y }}}
 	return ret }
 rfwht :: proc(num_arr: [dynamic]i64) -> [dynamic]i64
 {	ret := fwht(num_arr)
@@ -89,16 +88,16 @@ rle8_ascii_enc :: proc(txt: string) -> string // Run-length encoding type a
 		append(&txt_arr, get_ascii[txt[i]])
 		if length > 1 do append(&txt_arr, get_number[cast(u8)length])
 		length = 1 }
+
 	append(&txt_arr, get_ascii[txt[len(txt) - 1]])
 	if length > 1 do append(&txt_arr, get_number[cast(u8)length])
 	return join("", txt_arr) }
 
 // https://arxiv.org/pdf/2110.01111.pdf
 insertion_sort :: proc(arr: []u64) -> []u64
-{	for i in 0..<len(arr)
-	{	for j in 0..<len(arr)
-		{	if arr[i] < arr[j]
-			{	arr[i], arr[j] = arr[j], arr[i] }}}
+{	for i in 0..<len(arr) do for j in 0..<len(arr)
+	{{	if arr[i] < arr[j]
+		{	arr[i], arr[j] = arr[j], arr[i] }}}
 	return arr }
 // Work in progress
 hc_enc :: proc(txt: string) -> string // Huffman coding
@@ -141,9 +140,8 @@ join :: proc(separator: string, args: ..[dynamic]string) -> string
 	resize(&ret, length_sum * 2) }
 
 	index := 0
-	for i in args
-	{	for j in i
-		{	ret[index] = j
-			ret[index + 1] = separator
-			index += 2 }}
+	for i in args do for j in i
+	{{	ret[index] = j
+		ret[index + 1] = separator
+		index += 2 }}
 	return strings.concatenate(ret[:index - 1]) }
