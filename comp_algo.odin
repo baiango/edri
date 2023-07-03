@@ -93,19 +93,33 @@ rle8_ascii_enc :: proc(txt: string) -> string // Run-length encoding type a
 	if length > 1 do append(&txt_arr, get_number[cast(u8)length])
 	return join("", txt_arr) }
 
-// https://arxiv.org/pdf/2110.01111.pdf
-insertion_sort :: proc(arr: []u64) -> []u64
-{	for i in 0..<len(arr) do for j in 0..<len(arr)
-	{{	if arr[i] < arr[j] do arr[i], arr[j] = arr[j], arr[i] }}
-	return arr }
+
 // Work in progress
 hc_enc :: proc(txt: string) -> string // Huffman coding
-{	weights_trimmed: []u64
-{	weights: [256]u64
-	for i in 0..<len(txt) do weights[txt[i]] += 1
+{	weights: [dynamic]u64
+	resize(&weights, 256)
+	// Count characters
+{	swap: [dynamic]u64
+	resize(&swap, 256)
+	for i in 0..<len(txt) do swap[txt[i]] += 1
+	weights = swap }
+	// Clear zeros
+	characters: [dynamic]rune
+	resize(&weights, 256)
+{	swap: [dynamic]u64
+	for i in 0..<len(weights) do if weights[i] != 0
+	{	append(&swap, weights[i])
+		append(&characters, rune(i))}
+	weights = swap }
+	// Sort forward https://arxiv.org/pdf/2110.01111.pdf
+	for i in 0..<len(weights) do for j in 0..<len(weights)
+	{{	if weights[i] < weights[j]
+		{	weights[i], weights[j] = weights[j], weights[i]
+			characters[i], characters[j] = characters[j], characters[i] }}}
 	fmt.println(weights)
-	weights_trimmed = insertion_sort(weights[:]) }
-	fmt.println(weights_trimmed)
+	fmt.println(characters)
+
+
 	// char := 
 	return ""
 }
