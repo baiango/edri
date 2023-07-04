@@ -95,6 +95,14 @@ rle8_ascii_enc :: proc(txt: string) -> string // Run-length encoding type a
 
 
 // Work in progress
+get_binary_string :: proc(num: u64) -> string
+{	ret: [dynamic]string
+{	swap: [dynamic]string
+	for i in 0..<get_bit_length(num)
+	{	if num >> i & 1 == 0 do append(&swap, "0")
+		else do append(&swap, "1") }
+	for i := len(swap) - 1; i >= 0; i -= 1 do append(&ret, swap[i]) }
+	return strings.concatenate(ret[:])}
 hc_enc :: proc(txt: string) -> string // Huffman coding
 {	weights: [dynamic]u64
 	resize(&weights, 256)
@@ -119,20 +127,40 @@ hc_enc :: proc(txt: string) -> string // Huffman coding
 	fmt.println(weights)
 	fmt.println(characters)
 	// Reference
-{	binary_node :: struct { left, right: ^binary_node }
-	tmp := binary_node{ nil, nil }
-	bin := binary_node{ &tmp, nil }
-	fmt.println(bin) }
+// {	binary_node :: struct { left, right: ^binary_node }
+// 	tmp := binary_node{ nil, nil }
+// 	bin := binary_node{ &tmp, nil }
+// 	fmt.println(bin) }
 	// Build binary tree nodes
-	binary_node :: struct { left, right: rune, l_freq, r_freq: u64, position: u8 }
-	bin: [dynamic]binary_node
-	append(&bin, binary_node{ 'A', 'V', 4, 4, 0 })
-	selected := bin[len(bin) -  1]
-	direction: u8 = 0
-	if selected.l_freq + selected.r_freq < weights[2] do direction = 1
-	append(&bin, binary_node{ characters[2], '\x00', 5, 0, direction })
+	binary_node :: struct { left, right: rune, l_freq, r_freq: u64, position: u8, is_right_unused: bool }
+	tree: [dynamic]binary_node
+	append(&tree, binary_node{ 'A', 'V', 4, 4, 0, false })
+{	selected := tree[len(tree) -  1]
+	direction: u8 = 1
+	if selected.l_freq + selected.r_freq < weights[2]
+	{	direction = 0
+		selected.position = 1 }
+	append(&tree, binary_node{ characters[2], '\x00', weights[2], 0, direction, true })}
+{	selected := tree[len(tree) -  1]
+	direction: u8 = 1
+	if selected.l_freq + selected.r_freq < weights[3]
+	{	direction = 0
+		selected.position = 1 }
+	append(&tree, binary_node{ characters[3], '\x00', weights[3], 0, direction, true })
+	// Reverse the array
+{	swap: [dynamic]binary_node
+	resize(&swap, len(tree))
+	for i in 0..<len(tree) do swap[i] = tree[len(tree) - 1 - i]
+	tree = swap }
+{	
+	for i in 0..<len(tree)
+	{	}
 
-	fmt.println(bin)
+}
+	fmt.println(tree)
+	// Build path
+}
+
 
 	// char := 
 	return ""

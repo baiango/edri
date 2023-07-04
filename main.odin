@@ -79,4 +79,9 @@ unit_test :: proc()
 {	str := "AAAVCVVAVBBBBBCCCCCCC"
 	str = hc_enc(str)
 	fmt.println(str) }
+
+	fmt.println("get_binary_string test")
+{	bin_str := get_binary_string(0b1011)
+	if hash(bin_str) != hash("1011") do fmt.println("Info: get_binary_string is not 1011. It's", bin_str, ".")
+	fmt.println(bin_str) }
 }
