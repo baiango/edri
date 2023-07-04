@@ -132,35 +132,24 @@ hc_enc :: proc(txt: string) -> string // Huffman coding
 // 	bin := binary_node{ &tmp, nil }
 // 	fmt.println(bin) }
 	// Build binary tree nodes
-	binary_node :: struct { left, right: rune, l_freq, r_freq: u64, position: u8, is_right_unused: bool }
+	binary_node :: struct { character: rune, is_left: bool }
 	tree: [dynamic]binary_node
-	append(&tree, binary_node{ 'A', 'V', 4, 4, 0, false })
-{	selected := tree[len(tree) -  1]
-	direction: u8 = 1
-	if selected.l_freq + selected.r_freq < weights[2]
-	{	direction = 0
-		selected.position = 1 }
-	append(&tree, binary_node{ characters[2], '\x00', weights[2], 0, direction, true })}
-{	selected := tree[len(tree) -  1]
-	direction: u8 = 1
-	if selected.l_freq + selected.r_freq < weights[3]
-	{	direction = 0
-		selected.position = 1 }
-	append(&tree, binary_node{ characters[3], '\x00', weights[3], 0, direction, true })
-	// Reverse the array
-{	swap: [dynamic]binary_node
-	resize(&swap, len(tree))
-	for i in 0..<len(tree) do swap[i] = tree[len(tree) - 1 - i]
-	tree = swap }
-{	
-	for i in 0..<len(tree)
-	{	}
-
-}
+{	for i in 0..<len(characters) - 1
+	{	if characters[i] < characters[i + 1] do append(&tree, binary_node{characters[i], true })
+		else do append(&tree, binary_node{ characters[i], false }) }
+	append(&tree, binary_node{ characters[len(characters) - 1], true }) }
 	fmt.println(tree)
-	// Build path
-}
+	// Build tree path
+	position: [dynamic]string
+{	resize(&position, len(tree))
+	prefix: string
+	for i := len(tree) - 1; i >= 0; i -= 1
+	{	if tree[i].is_left == true
+		{	position[i] = join("", {prefix, "0"})
+			prefix = join("", {prefix, "1"}) }
+		else do position[i] = join("", {prefix, "1"}) }}
 
+	fmt.println(position)
 
 	// char := 
 	return ""
