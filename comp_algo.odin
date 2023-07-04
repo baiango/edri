@@ -112,13 +112,27 @@ hc_enc :: proc(txt: string) -> string // Huffman coding
 		append(&characters, rune(i))}
 	weights = swap }
 	// Sort forward https://arxiv.org/pdf/2110.01111.pdf
-	for i in 0..<len(weights) do for j in 0..<len(weights)
+{	for i in 0..<len(weights) do for j in 0..<len(weights)
 	{{	if weights[i] < weights[j]
 		{	weights[i], weights[j] = weights[j], weights[i]
-			characters[i], characters[j] = characters[j], characters[i] }}}
+			characters[i], characters[j] = characters[j], characters[i] }}}}
 	fmt.println(weights)
 	fmt.println(characters)
+	// Reference
+{	binary_node :: struct { left, right: ^binary_node }
+	tmp := binary_node{ nil, nil }
+	bin := binary_node{ &tmp, nil }
+	fmt.println(bin) }
+	// Build binary tree nodes
+	binary_node :: struct { left, right: rune, l_freq, r_freq: u64, position: u8 }
+	bin: [dynamic]binary_node
+	append(&bin, binary_node{ 'A', 'V', 4, 4, 0 })
+	selected := bin[len(bin) -  1]
+	direction: u8 = 0
+	if selected.l_freq + selected.r_freq < weights[2] do direction = 1
+	append(&bin, binary_node{ characters[2], '\x00', 5, 0, direction })
 
+	fmt.println(bin)
 
 	// char := 
 	return ""
