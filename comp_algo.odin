@@ -132,9 +132,9 @@ hc_enc :: proc(txt: string) -> string // Huffman coding
 // 	bin := binary_node{ &tmp, nil }
 // 	fmt.println(bin) }
 	// Build binary tree nodes
-{	binary_node :: struct { character: rune, is_left: bool }
+	binary_node :: struct { character: rune, is_left: bool }
 	tree: [dynamic]binary_node
-	for i in 0..<len(characters) - 1
+{	for i in 0..<len(characters) - 1
 	{	if characters[i] < characters[i + 1] do append(&tree, binary_node{characters[i], true })
 		else do append(&tree, binary_node{ characters[i], false }) }
 	append(&tree, binary_node{ characters[len(characters) - 1], true }) }
