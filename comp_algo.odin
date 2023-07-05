@@ -147,7 +147,9 @@ hc_enc :: proc(txt: string) -> string // Huffman coding
 	{	if tree[i].is_left == true
 		{	path[i] = join("", {prefix, "0"})
 			prefix = join("", {prefix, "1"}) }
-		else do path[i] = join("", {prefix, "1"})} }
+		else
+		{	path[i] = join("", {prefix, "1"})
+		}}}
 
 	fmt.println(path)
 
