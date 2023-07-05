@@ -113,7 +113,6 @@ hc_enc :: proc(txt: string) -> string // Huffman coding
 	weights = swap }
 	// Clear zeros
 	characters: [dynamic]rune
-	resize(&weights, 256)
 {	swap: [dynamic]u64
 	for i in 0..<len(weights) do if weights[i] != 0
 	{	append(&swap, weights[i])
@@ -151,7 +150,7 @@ hc_enc :: proc(txt: string) -> string // Huffman coding
 	// fmt.println(tree)
 	// Build tree path
 	path: [dynamic]string
-	
+
 
 	fmt.println(path)
 

@@ -77,7 +77,7 @@ unit_test :: proc()
 
 	fmt.println("huffman coding test")
 {	str := "AAAVCVVAVBBBBBCCCCCCC"
-	str = "ABCDDDEEEEEEEEFFFGHI"
+	str = "ABCDDDEEEEEEEEFFFGHIJKK"
 	str = hc_enc(str)
 	// ABCDDDEEEEEEEEFFFGHI
 	// if hash(str) != hash("\x72\x1f\x6d\x40\x0b\x37\x69\x742")
