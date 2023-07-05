@@ -77,6 +77,7 @@ unit_test :: proc()
 
 	fmt.println("huffman coding test")
 {	str := "AAAVCVVAVBBBBBCCCCCCC"
+	str = "ABCDDDEEEEEEE"
 	str = hc_enc(str)
 	fmt.println(str) }
 

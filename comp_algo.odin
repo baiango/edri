@@ -140,16 +140,16 @@ hc_enc :: proc(txt: string) -> string // Huffman coding
 	append(&tree, binary_node{ characters[len(characters) - 1], true }) }
 	fmt.println(tree)
 	// Build tree path
-	position: [dynamic]string
-{	resize(&position, len(tree))
+	path: [dynamic]string
+{	resize(&path, len(tree))
 	prefix: string
 	for i := len(tree) - 1; i >= 0; i -= 1
 	{	if tree[i].is_left == true
-		{	position[i] = join("", {prefix, "0"})
+		{	path[i] = join("", {prefix, "0"})
 			prefix = join("", {prefix, "1"}) }
-		else do position[i] = join("", {prefix, "1"}) }}
+		else do path[i] = join("", {prefix, "1"})} }
 
-	fmt.println(position)
+	fmt.println(path)
 
 	// char := 
 	return ""
