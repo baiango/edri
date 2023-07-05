@@ -132,24 +132,26 @@ hc_enc :: proc(txt: string) -> string // Huffman coding
 // 	bin := binary_node{ &tmp, nil }
 // 	fmt.println(bin) }
 	// Build binary tree nodes
-	binary_node :: struct { character: rune, is_left: bool }
-	tree: [dynamic]binary_node
-{	for i in 0..<len(characters) - 1
-	{	if characters[i] < characters[i + 1] do append(&tree, binary_node{characters[i], true })
-		else do append(&tree, binary_node{ characters[i], false }) }
-	append(&tree, binary_node{ characters[len(characters) - 1], true }) }
-	fmt.println(tree)
+	// binary_node :: struct { character: rune, is_left: bool }
+	node :: struct {
+		left, right: ^node
+	}
+	data :: struct {
+		is_left_node, is_right_node: bool
+		left_rune, right_rune: rune
+		left_node, right_node: node
+	}
+	left :: true
+	right :: false
+	// tree: [dynamic]binary_node
+{	value: u64 = 0
+	for i in 0..<len(characters) - 1
+	{	if characters[i] < characters[i + 1]
+		{	}} }
+	// fmt.println(tree)
 	// Build tree path
 	path: [dynamic]string
-{	resize(&path, len(tree))
-	prefix: string
-	for i := len(tree) - 1; i >= 0; i -= 1
-	{	if tree[i].is_left == true
-		{	path[i] = join("", {prefix, "0"})
-			prefix = join("", {prefix, "1"}) }
-		else
-		{	path[i] = join("", {prefix, "1"})
-		}}}
+	
 
 	fmt.println(path)
 
