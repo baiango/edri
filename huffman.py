@@ -18,6 +18,11 @@ def hc_enc(input):
 				weights[i], weights[j] = weights[j], weights[i]
 				characters[i], characters[j] = characters[j], characters[i]
 
+	characters = ['A', 'B', 'C', 'G', 'H', 'I', 'J', 'K', 'D', 'F', 'E']
+	print(characters)
+	print(weights)
+
+
 	class Node:
 		def __init__(self, left, right, sum):
 			self.left = left
@@ -28,29 +33,44 @@ def hc_enc(input):
 			return f'({self.left}{self.right}, {self.sum})'
 
 	# Tree Constructor
-	path = []
-	weights_deduped = list(dict.fromkeys(weights))
-	for iter in weights_deduped:
-		print(path)
-		count = weights.count(iter)
-		offset = weights.index(iter)
-		# Merge double
-		for i in range(offset, offset + count - 1, 2):
-			path.append(Node(characters[i], characters[i + 1], weights[i] + weights[i + 1]))
-		# Merge 2 doubles
-		for i in range(0, len(path) - 1, 2):
-			if path[i].sum <= path[i + 1].sum:
-				path[i] = Node(path[i], path[i + 1], path[i].sum + path[i + 1].sum)
-				path.pop(1)
-		# Merge single
-		if count & 1:
-			path[-1] = Node(characters[offset], path[-1], weights[offset] + path[-1].sum)
-	path[0] = Node(path[0], path[1], path[0].sum + path[1].sum)
-	path.pop(1)
+	tree = None
+	for _ in [0]:
+		swap = []
+		weights_deduped = list(dict.fromkeys(weights))
+		for iter in weights_deduped:
+			count = weights.count(iter)
+			offset = weights.index(iter)
+			# Merge double
+			for i in range(offset, offset + count - 1, 2):
+				swap.append(Node(characters[i], characters[i + 1], weights[i] + weights[i + 1]))
+			# Merge 2 doubles
+			for i in range(0, len(swap) - 1, 2):
+				if swap[i].sum <= swap[i + 1].sum:
+					swap[i] = Node(swap[i], swap[i + 1], swap[i].sum + swap[i + 1].sum)
+					swap.pop(1)
+			# Merge single
+			if count & 1:
+				swap[-1] = Node(characters[offset], swap[-1], weights[offset] + swap[-1].sum)
+		tree = Node(swap[0], swap[1], swap[0].sum + swap[1].sum)
 
-	print(len(path))
-	print(path)
+	# Path generator (Breadth-first search)
+	path = []
+	for _ in [0]:
+		queue, pos = [tree], ['']
+		while queue:
+			if type(queue[0]) is Node:
+				queue.append(queue[0].left)
+				queue.append(queue[0].right)
+				pos.append(f'{pos[0]}0')
+				pos.append(f'{pos[0]}1')
+			else:
+				path.append((queue[0], pos[0]))
+			queue.pop(0)
+			pos.pop(0)
+
+	print(tree)
 	print(weights)
+	print(path)
 	print(characters)
 	return ret
 
