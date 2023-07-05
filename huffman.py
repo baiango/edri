@@ -35,17 +35,63 @@ def hc_enc(input):
 	# 	path.append(Node(characters[i], characters[i + 1], weights[i] + weights[i + 1]))
 	# 	path[-1] = Node(path[-1], characters[i + 2], path[-1].sum + weights[i + 2])
 
-
-
-	for i in range(0, weights.count(1) - 1, 2):
+	# Depth 1
+	# Build tree
+	print(path)
+	count = weights.count(1)
+	offset = weights.index(1)
+	for i in range(0, count - 1, 2):
 		path.append(Node(characters[i], characters[i + 1], weights[i] + weights[i + 1]))
+	# Merge
 	for i in range(0, len(path) - 1, 2):
-		path[i] = Node(path[i], path[i + 1], path[i].sum + path[i + 1].sum)
-		path.pop(1)
-	if weights.count(1) & 1:
-		path[-1] = Node(characters[weights.count(1) - 1], path[-1], weights[weights.count(1) - 1])
+		if path[i].sum <= path[i + 1].sum:
+			path[i] = Node(path[i], path[i + 1], path[i].sum + path[i + 1].sum)
+			path.pop(1)
+	# Merge single
+	if count & 1:
+		path[-1] = Node(characters[offset], path[-1], weights[offset] + path[-1].sum)
 
+	# Depth 2
+	print(path)
+	count = weights.count(2)
+	offset = weights.index(2)
+	if count & 1:
+		path[-1] = Node(characters[offset], path[-1], weights[offset] + path[-1].sum)
+	for i in range(offset, offset + count - 1, 2):
+		path.append(Node(characters[i], characters[i + 1], weights[i] + weights[i + 1]))
+	# Merge
+	for i in range(0, len(path) - 1, 2):
+		if path[i].sum <= path[i + 1].sum:
+			path[i] = Node(path[i], path[i + 1], path[i].sum + path[i + 1].sum)
+			path.pop(1)
 
+	# Depth 3
+	print(path)
+	count = weights.count(3)
+	offset = weights.index(3)
+	if count & 1: # Always no with the string "ABCDDEDEEEEEEEFFFGHIJKK"
+		path[-1] = Node(characters[offset], path[-1], weights[offset] + path[-1].sum)
+	for i in range(offset, offset + count - 1, 2):
+		path.append(Node(characters[i], characters[i + 1], weights[i] + weights[i + 1]))
+	# Merge
+	for i in range(0, len(path) - 1, 2):
+		if path[i].sum <= path[i + 1].sum:
+			path[i] = Node(path[i], path[i + 1], path[i].sum + path[i + 1].sum)
+			path.pop(1)
+
+	# Depth 4
+	print(path)
+	count = weights.count(8)
+	offset = weights.index(8)
+	if count & 1:
+		path[-1] = Node(characters[offset], path[-1], weights[offset] + path[-1].sum)
+	for i in range(offset, offset + count - 1, 2):
+		path.append(Node(characters[i], characters[i + 1], weights[i] + weights[i + 1]))
+	# Merge
+	for i in range(0, len(path) - 1, 2):
+		if path[i].sum <= path[i + 1].sum:
+			path[i] = Node(path[i], path[i + 1], path[i].sum + path[i + 1].sum)
+			path.pop(1)
 
 	print(weights)
 	print(characters)
