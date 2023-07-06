@@ -1,6 +1,6 @@
 from icecream import ic
 ic.configureOutput(includeContext=True) # It include the printing command and the line
-print = ic()
+print = ic
 'pip3 install icecream'
 
 def hc_enc(input):
