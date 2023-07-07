@@ -48,13 +48,7 @@ def hc_enc(input):
 		while i < len(weights):
 			print(len(swap))
 			print(swap)
-			for j in range(0, len(swap) - 1, 2):
-				print()
-				if swap[j].sum == swap[j + 1].sum:
-					swap[j] = Node(swap[j], swap[j + 1], swap[j].sum + swap[j + 1].sum)
-					swap.pop(1)
-					i += 1
-			if i + 1 < len(weights) and weights[i] == weights[i+1]:
+			if i + 1 < len(weights) and weights[i] >= weights[i+1]:
 				swap.insert(0, Node(characters[i], characters[i+1], weights[i] + weights[i+1]))
 				i += 2
 				continue
@@ -62,7 +56,11 @@ def hc_enc(input):
 				swap[-1] = Node(characters[i], swap[-1], weights[i] + swap[-1].sum)
 				i += 1
 				continue
-			print('Hc Error!')
+			elif weights[i] >= swap[-1].sum:
+				swap[-1] = Node(swap[-1], characters[i], weights[i] + swap[-1].sum)
+				i += 1
+				continue
+			print('hc_enc Error!')
 			break
 
 		swap = Node(swap[0], swap[1], swap[0].sum + swap[1].sum)
