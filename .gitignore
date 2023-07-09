@@ -1,2 +1,4 @@
-
-edri.exe
+/cpp/x64
+/cpp/.vs
+/.vscode
+*.exe
