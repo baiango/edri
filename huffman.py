@@ -3,6 +3,7 @@ ic.configureOutput(includeContext=True) # It include the printing command and th
 print = ic
 'pip3 install icecream'
 
+# https://favtutor.com/blogs/huffman-coding
 def hc_enc(input):
 	ret = ""
 	weights = [0] * 256
@@ -24,29 +25,35 @@ def hc_enc(input):
 
 		def __repr__(self): return f'({self.left}{self.right})'
 
+	class Connector(Node):
+		def __init__(self, sum):
+			self.sum = sum
+
+		def __repr__(self): return f'({self.left}{self.right}, {self.sum})'
+
 	# Tree Constructor
 	tree = None
 	for _ in [0]:
-		swap = []
+		chars = []
 		sums = []
 
-		for i in range(len(weights)):
-			swap.append(characters[i])
+		for i in range(2, len(weights)):
+			chars.append(characters[i])
 			sums.append(weights[i])
 
-		while len(swap) > 1:
-			swap[0] = Node(swap[0], swap[1])
+		while len(chars) > 1:
+			chars[0] = Node(chars[0], chars[1])
 			sums[0] = sums[0] + sums[1]
-			swap.pop(1)
+			chars.pop(1)
 			sums.pop(1)
 
-			for i in range(len(swap)):
-				for j in range(len(swap)):
+			for i in range(len(chars)):
+				for j in range(len(chars)):
 					if sums[i] < sums[j]:
-						swap[i], swap[j] = swap[j], swap[i]
+						chars[i], chars[j] = chars[j], chars[i]
 						sums[i], sums[j] = sums[j], sums[i]
 
-		tree = swap[0]
+		tree = chars[0]
 
 	# Path generator (Breadth-first search)
 	path = []
