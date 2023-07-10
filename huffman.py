@@ -37,11 +37,12 @@ def hc_enc(input):
 		chars = []
 		sums = []
 
-		for i in range(2, len(weights)):
+		for i in range(len(weights)):
 			chars.append(characters[i])
 			sums.append(weights[i])
 
 		while len(chars) > 1:
+			print(chars)
 			chars[0] = Node(chars[0], chars[1])
 			sums[0] = sums[0] + sums[1]
 			chars.pop(1)
