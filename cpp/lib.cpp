@@ -7,6 +7,8 @@ using std::cout;
 #include <array>
 #include <vector>
 #include <variant>
+#include <algorithm>
+using std::sort;
 using std::string;
 using std::vector;
 using std::array;
@@ -19,7 +21,7 @@ string hc_enc(string input)
 	for (auto i : weights)
 		cout << i << " ";
 	cout << "\n";
-	//prt(weights); // works
+	//prt(weights); // it works
 
 	vector<uint8_t> characters;
 {	vector<uint64_t> swap;
@@ -30,7 +32,7 @@ string hc_enc(string input)
 	weights = swap; }
 
 	struct Node {
-		variant<uint8_t, Node *> left, right;
+		variant<uint8_t, Node *> *left, *right;
 	};
 
 	//Tree *tree;
@@ -44,12 +46,13 @@ string hc_enc(string input)
 	while (chars.size() > 1)
 	{	prt(chars);
 		prt(sums);
-		Node tmp = Node{ chars[0], chars[1] };
+		Node tmp = Node{ &chars[0], &chars[1] };
 		chars[0] = &tmp;
 		sums[0] = sums[0] + sums[1];
 		chars.erase(chars.begin() + 1);
 		sums.erase(sums.begin() + 1);
 
+		// Bubble sort
 		for (auto i = 0; i < sums.size(); i++)
 		{	for (auto j = 0; j < sums.size(); j++)
 			{	if (sums[i] < sums[j])
@@ -59,9 +62,12 @@ string hc_enc(string input)
 
 	prt(chars[0]);
 	Node* nod = std::get<Node*>(chars[0]);
-	prt(std::get<Node *>(chars[0])->left);
+	prt(std::get<Node*>(chars[0])->left);
 	prt(nod->left);
 	prt(nod->right);
+	Node* nod2 = std::get<Node*>(*nod->left);
+	prt(nod2->left);
+	prt(nod2->right);
 	//cout << swap->left << "\n";
 	//for (auto i : tree)
 		//cout << i << " ";

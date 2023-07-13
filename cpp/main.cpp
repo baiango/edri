@@ -19,16 +19,16 @@ struct Node {
 int main()
 {	using std::cout;
 	string str = "ABCDDEDEEEEEEEFFFGHIJKK";
-	cout << hc_enc(str) << "\n";
+	prt(hc_enc(str));
 
 	Node aaa;
 	Node bbb;
 	bbb.l_char = 'B';
 	aaa.r_node = &bbb;
-	cout << aaa.l_char << "\n";
-	cout << aaa.r_char << "\n";
-	cout << aaa.l_node << "\n";
-	cout << aaa.r_node << "\n";
-	cout << aaa.r_node->l_char << "\n";
+	prt(aaa.l_char);
+	prt(aaa.r_char);
+	prt(aaa.l_node);
+	prt(aaa.r_node);
+	prt(aaa.r_node->l_char);
 	//prt(aaa);
 }
