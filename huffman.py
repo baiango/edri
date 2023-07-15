@@ -36,23 +36,28 @@ def hc_enc(input):
 	for _ in [0]:
 		chars = []
 		sums = []
+		index = []
 
 		for i in range(len(weights)):
 			chars.append(characters[i])
 			sums.append(weights[i])
+			index.append(i)
 
 		while len(chars) > 1:
-			print(chars)
+			print(index)
 			chars[0] = Node(chars[0], chars[1])
 			sums[0] = sums[0] + sums[1]
+			index[0] = Node(index[0], index[1])
 			chars.pop(1)
 			sums.pop(1)
+			index.pop(1)
 
 			for i in range(len(chars)):
 				for j in range(len(chars)):
 					if sums[i] < sums[j]:
 						chars[i], chars[j] = chars[j], chars[i]
 						sums[i], sums[j] = sums[j], sums[i]
+						index[i], index[j] = index[j], index[i]
 
 		tree = chars[0]
 

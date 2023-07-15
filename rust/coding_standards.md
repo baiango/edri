@@ -1,5 +1,5 @@
 # Performance
-### Use functions that support AVX in the STL
+### Auto-vectorization
 Only use functions from the Rust standard library if it support Advanced Vector Extensions 1/2(AVX/2). (Excluding AVX512 only functions because of downclocking and overheating reason)  
 [rust/src/main.rs](https://github.com/baiango/edri/blob/fea10698b0773ac95917ab4eae22689f80c6c705/rust/src/main.rs)
 ```
@@ -46,4 +46,4 @@ rust::main:
  pop     rsi
  ret
 ```
-You can see it use xmm or ymm in the assembly. You can expect that will run faster x2 than your normal scalar code.
+You can see it use xmm or ymm in the assembly. You can expect that will run faster x2 than your normal scalar code for that line. (Not always though.)
