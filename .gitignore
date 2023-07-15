@@ -1,5 +1,6 @@
 /cpp/x64
 /cpp/.vs
 /cpp/Intel® VTune™ Profiler Results
+/rust/target
 /.vscode
 *.exe
