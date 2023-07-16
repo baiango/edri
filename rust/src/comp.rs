@@ -1,7 +1,11 @@
+use core::fmt;
 use std::any::Any;
 
+
 pub fn hc_enc(input: &[u8]) -> Vec<u8>
-{	let mut ret = b"ABCDEFGHIJKLMNOPQRSTUVWXYZ".to_vec();
+{	let mut ret;
+	// ret = b"ABCDEFGHIJKLMNOPQRSTUVWXYZ".to_vec();
+	ret = b"ABCDDEDEEEEEEEFFFGHIJKK".to_vec();
 	let mut weights : Vec<u64> = vec![0; 256];
 	for c in input { weights[*c as usize] += 1; }
 
@@ -13,21 +17,25 @@ pub fn hc_enc(input: &[u8]) -> Vec<u8>
 			characters.push(i as u8); }}
 		weights = swap; }
 
-	struct BinaryTree {
-		pub left: NodeData,
-		pub right: NodeData,
+	// https://dawchihliou.github.io/articles/binary-tree-insertion-in-rust
+	#[derive(Debug)]
+	struct BinaryTree<T> {
+		pub data: T,
+		pub left: Option<Box<BinaryTree<T>>>, pub right: Option<Box<BinaryTree<T>>>,
 	}
 
-	enum NodeData {
-		Character(u8),
-		Node(Option<Box<BinaryTree>>)
-		// Node(Option<Box<VariantTree>>)
+	impl<T> BinaryTree<T> {
+		pub fn new(data: T) -> Self { BinaryTree { data, left: None, right: None }}
+		pub fn left(mut self, node: BinaryTree<T>) -> Self { self.left = Some(Box::new(node)); self }
+		pub fn right(mut self, node: BinaryTree<T>) -> Self { self.right = Some(Box::new(node)); self }
 	}
 
-	// enum VariantTree {
-	// 	Character(u8),
-	// 	Node(BinaryTree),
-	// }
+	let aaa = BinaryTree::new(1)
+		.left(BinaryTree::new(2))
+		.right(BinaryTree::new(3));
+
+	println!("{:?}", aaa);
+
 
 	// let mut tree: dyn Any;
 
