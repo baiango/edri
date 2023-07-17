@@ -23,13 +23,13 @@ def hc_enc(input):
 			self.left = left
 			self.right = right
 
-		def __repr__(self): return f'({self.left}{self.right})'
+		def __repr__(self): return f'({self.left} {self.right})'
 
 	class Connector(Node):
 		def __init__(self, sum):
 			self.sum = sum
 
-		def __repr__(self): return f'({self.left}{self.right}, {self.sum})'
+		def __repr__(self): return f'({self.left} {self.right}, {self.sum})'
 
 	# Tree Constructor
 	tree = None
